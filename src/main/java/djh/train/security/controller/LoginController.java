@@ -6,6 +6,7 @@ import org.apache.juli.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -18,10 +19,15 @@ public class LoginController {
     @Autowired
     private CustomerRepository _customerRepository;
 
+    @Autowired
+    private PasswordEncoder _passwordEncoder;
+
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     public ResponseEntity<String> registerUser(@Valid @RequestBody Customer customer){
         Customer savedCustomer = null;
         ResponseEntity response = null;
+        String hashPwd = _passwordEncoder.encode(customer.getPwd());
+        customer.setPwd(hashPwd);
         _logger.info("Customer details are: "+customer);
         try{
             savedCustomer = _customerRepository.save(customer);
