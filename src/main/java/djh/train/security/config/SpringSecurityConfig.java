@@ -26,11 +26,11 @@ public class SpringSecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         /* Custom Spring Security Configuration */
-
-        http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
+        http.csrf(csrfCustomizer -> csrfCustomizer.disable())
+                .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                 authorizationManagerRequestMatcherRegistry.requestMatchers("/account","/loans","/balance","/cards").authenticated()
 
-                        .requestMatchers("/contact","/notices").permitAll()
+                        .requestMatchers("/register","/contact","/notices").permitAll()
                         .anyRequest().authenticated());
         http.formLogin(Customizer.withDefaults());
         http.httpBasic(Customizer.withDefaults());
